@@ -7,3 +7,8 @@ From this directory:
 ```
 /Applications/love.app/Contents/MacOS/love .
 ```
+
+## Controls
+* <- go left
+* -> go right
+* ^ look up
