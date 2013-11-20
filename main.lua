@@ -10,7 +10,7 @@ function love.load()
     window_height = cave.image:getHeight()/(1/scale_factor)
     cave.floor = (1.4*window_height)/(1/scale_factor)
     cave.left_wall = 0.1*window_width
-    cave.right_wall = 0.9*window_width
+    cave.right_wall = 0.83*window_width
     cave.draw = function()
         love.graphics.draw(cave.image, 0, 0, 0, scale_factor, scale_factor)
     end
