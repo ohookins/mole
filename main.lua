@@ -29,10 +29,12 @@ function love.load()
 
     -- Set up the actor
     mole = {
-        image = love.graphics.newImage("images/mole.png"),
+        walking = love.graphics.newImage("images/mole.png"),
+        looking = love.graphics.newImage("images/looking.png"),
         sound = love.audio.newSource("audio/feet.ogg", "static"),
         facing = 1 -- 1: right, -1: left
     }
+    mole.image = mole.walking
     mole.sound:setLooping(true)
     mole.x = window_width/2
     mole.height = mole.image:getHeight()
@@ -98,6 +100,21 @@ function love.load()
     -- Collections
     levels = {cave}
     objects = {mole}
+end
+
+-- Cuteness enhancements
+function love.keypressed(key)
+    if key == 'up' then
+        mole.image = mole.looking
+        mole.y = mole.y - 8
+    end
+end
+
+function love.keyreleased(key)
+    if key == 'up' then
+        mole.image = mole.walking
+        mole.y = mole.y + 8
+    end
 end
 
 function love.draw()
