@@ -39,10 +39,11 @@ function love.load()
         facing = 1 -- 1: right, -1: left
     }
     mole.sound:setLooping(true)
+    mole.sound:setPitch(0.4)
     mole.x = window_width/2
     mole.y = cave.floor - mole.height
     mole.draw = function()
-        local image_frame = round(mole.current_frame / 2) % 8
+        local image_frame = round(mole.current_frame / 4) % 8
         quad = love.graphics.newQuad(mole.width*image_frame, 0, mole.width, mole.height, mole.image:getWidth(), mole.image:getHeight())
         if mole.facing == -1 then
             quad:flip(true, false)
@@ -51,7 +52,7 @@ function love.load()
         end
         love.graphics.drawq(mole.image, quad, mole.x - mole.width/2, mole.y)
     end
-    mole.accel = 0.5
+    mole.accel = 0.2
     mole.speed = 0
 
     mole.update = function()
@@ -73,10 +74,10 @@ function love.load()
         end
 
         -- Limit top speed
-        if mole.speed > 10 then
-            mole.speed = 10
-        elseif mole.speed < -10 then
-            mole.speed = -10
+        if mole.speed > 5 then
+            mole.speed = 5
+        elseif mole.speed < -5 then
+            mole.speed = -5
         end
 
         -- New possible x position
