@@ -31,6 +31,7 @@ function love.load()
     mole = {
         walking = love.graphics.newImage("images/mole.png"),
         looking = love.graphics.newImage("images/looking.png"),
+        blinking = love.graphics.newImage("images/blinking.png"),
         sound = love.audio.newSource("audio/feet.ogg", "static"),
         facing = 1 -- 1: right, -1: left
     }
@@ -45,22 +46,44 @@ function love.load()
     end
     mole.accel = 0.5
     mole.speed = 0
+    mole.state = "stopped"
+    mole.stopped_at = love.timer.getMicroTime()
+
     mole.update = function()
         -- Movement
         if love.keyboard.isDown('left') then
+            mole.state = "walking"
+            mole.image = mole.walking
             mole.speed = mole.speed - mole.accel
             if mole.facing == 1 then
                 mole.speed = mole.speed * 0.2
                 mole.facing = -1
             end
         elseif love.keyboard.isDown('right') then
+            mole.state = "walking"
+            mole.image = mole.walking
             mole.speed = mole.speed + mole.accel
             if mole.facing == -1 then
                 mole.speed = mole.speed * 0.2
                 mole.facing = 1
             end
         else
+            if mole.state == "walking" then
+                mole.stopped_at = love.timer.getMicroTime()
+                mole.state = "stopped"
+            end
             mole.speed = mole.speed * 0.5
+        end
+
+        -- Blink
+        if mole.state == "stopped" and love.timer.getMicroTime() - mole.stopped_at > 5 then
+            mole.state = "blinking"
+            mole.image = mole.blinking
+            mole.stopped_at = love.timer.getMicroTime()
+        elseif mole.state == "blinking" and love.timer.getMicroTime() - mole.stopped_at > 0.05 then
+            mole.state = "stopped"
+            mole.image = mole.walking
+            mole.stopped_at = love.timer.getMicroTime()
         end
 
         -- Limit top speed
