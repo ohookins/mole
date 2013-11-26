@@ -14,9 +14,12 @@ mole = {
     accel                 = 0.2,
     speed                 = 0,
     sound                 = love.audio.newSource("audio/feet.ogg", "static"),
+    fart                  = love.audio.newSource("audio/fart.ogg", "static"),
 }
 mole.sound:setLooping(true)
 mole.sound:setPitch(0.4)
+mole.fart:setLooping(false)
+mole.fart:setPitch(1.3)
 mole.walking = newAnimation(mole.walk_spritesheet, mole.width, mole.height, 0.1, 0)
 mole.crouching = newAnimation(mole.crouch_spritesheet, mole.width, mole.height, 0.1, 0)
 mole.crouching:setMode("once")
@@ -71,6 +74,7 @@ function love.keypressed(key)
 
     elseif key == "down" then
         if mole.state == "idle" then
+            mole.fart:play()
             mole.state = "crouching"
         end
 
