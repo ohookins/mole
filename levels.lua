@@ -6,6 +6,20 @@ levels = {
         walls = {
             left = 40,
             right = 680
+        },
+        objects = {
+            {
+                name = "ladder",
+                x1 = 550,
+                x2 = 590,
+                y1 = 0,
+                y2 = 600,
+                -- TODO: Somehow abstract objects in rooms out
+                draw = function() end,
+                isClimbable = true,
+                collided = function(x, y) return x >= 550 and x <= 590 end,
+                centre_x = (590 + 550)/2
+            }
         }
     }
 }

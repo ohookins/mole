@@ -31,6 +31,10 @@ function love.draw()
     -- Draw level
     current_level.draw()
 
+    for i,object in pairs(current_level.level.objects) do
+        object.draw()
+    end
+
     -- Update and draw objects
     for i,object in pairs(objects) do
         object.draw()
