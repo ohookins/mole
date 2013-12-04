@@ -3,9 +3,10 @@ require("AnAL")
 
 -- Set up the actor
 mole = {
-    walk_spritesheet      = love.graphics.newImage("images/mole.png"),
+    walk_spritesheet      = love.graphics.newImage("images/walking.png"),
+    neutral_sprite        = love.graphics.newImage("images/neutral.png"),
     crouch_spritesheet    = love.graphics.newImage("images/crouching.png"),
-    lookup_sprite         = love.graphics.newImage("images/lookup.png"),
+    lookup_spritesheet    = love.graphics.newImage("images/looking.png"),
     gettingup_spritesheet = love.graphics.newImage("images/gettingup.png"),
     climbing_spritesheet  = love.graphics.newImage("images/climbing.png"),
     width                 = 125, -- hard code due to spritesheet
@@ -24,6 +25,8 @@ mole.sound:setPitch(0.4)
 mole.fart:setLooping(false)
 mole.fart:setPitch(1.3)
 mole.walking = newAnimation(mole.walk_spritesheet, mole.width, mole.height, 0.1, 0)
+mole.looking = newAnimation(mole.lookup_spritesheet, mole.width, mole.height, 0.1, 0)
+mole.looking:setMode("once")
 mole.crouching = newAnimation(mole.crouch_spritesheet, mole.width, mole.height, 0.1, 0)
 mole.crouching:setMode("once")
 mole.gettingup = newAnimation(mole.gettingup_spritesheet, mole.width, mole.height, 0.1, 0)
@@ -33,14 +36,14 @@ mole.climbing = newAnimation(mole.climbing_spritesheet, mole.width, mole.climbin
 
 -- State machine
 mole.action = {
-    ["looking"]       = function(d, w) love.graphics.draw(mole.lookup_sprite, mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
+    ["looking"]       = function(d, w) mole.looking:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
     ["crouching"]     = function(d, w) mole.crouching:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
     ["getting_up"]    = function(d, w) mole.gettingup:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
     ["walking"]       = function(d, w) mole.walking:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
     ["climbing_up"]   = function(d, w) mole.climbing:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
     ["on_ladder"]     = function(d, w) mole.climbing:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
     ["climbing_down"] = function(d, w) mole.climbing:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
-    ["idle"]          = function(d, w) mole.walking:draw(mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
+    ["idle"]          = function(d, w) love.graphics.draw(mole.neutral_sprite, mole.x - mole.width/2, mole.y, 0, d, 1, w) end,
 }
 
 mole.draw = function()
@@ -66,6 +69,9 @@ function love.keyreleased(key)
 
     elseif key == "up" then
         if mole.state == "looking" then
+            -- FIXME: Put this somewhere better
+            mole.looking:reset()
+            mole.looking:play()
             mole.state = "idle"
         elseif mole.state == "climbing_up" then
             for i,obj in ipairs(current_level.level.objects) do
@@ -161,6 +167,8 @@ mole.update = function(dt)
     -- Stationary activities
     if mole.state == "crouching" then
         mole.crouching:update(dt)
+    elseif mole.state == "looking" then
+        mole.looking:update(dt)
     end
 
     if mole.state == "getting_up" then
